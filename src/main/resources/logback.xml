@@ -4,7 +4,7 @@
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
-    <property name="LOG_DIR" value="C:\Users\kravm\IdeaProjects\auto\src\main\resources" />
+    <property name="LOG_DIR" value="/Users/caregor/IdeaProjects/java_hw_5/src/main/resources" />
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>${LOG_DIR}/tests.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">

@@ -50,4 +50,30 @@ public class GetLocationTest extends AbstractTest{
         assertEquals(200, responseOk.getStatusLine().getStatusCode());
         assertEquals("OK", mapper.readValue(responseOk.getEntity().getContent(), Location.class).getKey());
     }
+
+    @Test
+    void get_shouldReturn403() throws IOException, URISyntaxException {
+        logger.info("Тест код ответа 403 запущен");
+        //given
+        logger.debug("Формирование мока для GET /locations/v1/cities/autocomplete");
+        stubFor(get(urlPathEqualTo("/locations/v1/cities/autocomplete"))
+                .withQueryParam("apiKey", notMatching("fffffvdfvdvdvdvffvdfvdfvdfv"))
+                .willReturn(aResponse()
+                        .withStatus(403).withBody("forbidden")));
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpGet request = new HttpGet(getBaseUrl()+"/locations/v1/cities/autocomplete");
+        URI uri = new URIBuilder(request.getURI())
+                .addParameter("apiKey", "A_fffffvdfvdvdvdvffvdfvdfvdfv")
+                .build();
+        request.setURI(uri);
+        logger.debug("http клиент создан");
+        //when
+        HttpResponse response = httpClient.execute(request);
+        //then
+        verify(getRequestedFor(urlPathEqualTo("/locations/v1/cities/autocomplete"))
+                .withQueryParam("apiKey", equalTo("A_fffffvdfvdvdvdvffvdfvdfvdfv")));
+        assertEquals(403, response.getStatusLine().getStatusCode());
+        assertEquals("forbidden", convertResponseToString(response));
+
+    }
 }
